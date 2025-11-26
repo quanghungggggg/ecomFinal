@@ -8,15 +8,15 @@ const AdminSidebar = (props) => {
   return (
     <Fragment>
       <div
-        style={{ boxShadow: "1px 1px 8px 0.2px #aaaaaa" , height: "100%"}}
+        style={{ boxShadow: "1px 1px 8px 0.2px #aaaaaa", height: "100%" }}
         id="sidebar"
         className="hidden md:block sticky top-0 left-0 h-screen md:w-3/12 lg:w-2/12 sidebarShadow bg-white text-gray-600"
       >
         <div
           onClick={(e) => history.push("/admin/dashboard")}
           className={`${location.pathname === "/admin/dashboard"
-              ? "border-r-4 border-gray-800 bg-gray-100"
-              : ""
+            ? "border-r-4 border-gray-800 bg-gray-100"
+            : ""
             } hover:bg-gray-200 cursor-pointer flex flex-col items-center justify-center py-6`}
         >
           <span>
@@ -41,8 +41,8 @@ const AdminSidebar = (props) => {
         <div
           onClick={(e) => history.push("/admin/dashboard/categories")}
           className={`${location.pathname === "/admin/dashboard/categories"
-              ? "border-r-4 border-gray-800 bg-gray-100"
-              : ""
+            ? "border-r-4 border-gray-800 bg-gray-100"
+            : ""
             } hover:bg-gray-200 cursor-pointer flex flex-col items-center justify-center py-6`}
         >
           <span>
@@ -67,8 +67,8 @@ const AdminSidebar = (props) => {
         <div
           onClick={(e) => history.push("/admin/dashboard/products")}
           className={`${location.pathname === "/admin/dashboard/products"
-              ? "border-r-4 border-gray-800 bg-gray-100"
-              : ""
+            ? "border-r-4 border-gray-800 bg-gray-100"
+            : ""
             } hover:bg-gray-200 cursor-pointer flex flex-col items-center justify-center py-6`}
         >
           <span>
@@ -93,8 +93,8 @@ const AdminSidebar = (props) => {
         <div
           onClick={(e) => history.push("/admin/dashboard/orders")}
           className={`${location.pathname === "/admin/dashboard/orders"
-              ? "border-r-4 border-gray-800 bg-gray-100"
-              : ""
+            ? "border-r-4 border-gray-800 bg-gray-100"
+            : ""
             } hover:bg-gray-200 cursor-pointer flex flex-col items-center justify-center py-6`}
         >
           <span>
@@ -119,8 +119,8 @@ const AdminSidebar = (props) => {
         <div
           onClick={(e) => history.push("/admin/dashboard/users")}
           className={`${location.pathname === "/admin/dashboard/users"
-              ? "border-r-4 border-gray-800 bg-gray-100"
-              : ""
+            ? "border-r-4 border-gray-800 bg-gray-100"
+            : ""
             } hover:bg-gray-200 cursor-pointer flex flex-col items-center justify-center py-6`}
         >
           <span>
@@ -132,8 +132,8 @@ const AdminSidebar = (props) => {
         <div
           onClick={(e) => history.push("/admin/dashboard/redeemPoints")}
           className={`${location.pathname === "/admin/dashboard/redeemPoints"
-              ? "border-r-4 border-gray-800 bg-gray-100"
-              : ""
+            ? "border-r-4 border-gray-800 bg-gray-100"
+            : ""
             } hover:bg-gray-200 cursor-pointer flex flex-col items-center justify-center py-6`}
         >
           <span>
@@ -145,8 +145,8 @@ const AdminSidebar = (props) => {
         <div
           onClick={(e) => history.push("/admin/dashboard/discounts")}
           className={`${location.pathname === "/admin/dashboard/discounts"
-              ? "border-r-4 border-gray-800 bg-gray-100"
-              : ""
+            ? "border-r-4 border-gray-800 bg-gray-100"
+            : ""
             } hover:bg-gray-200 cursor-pointer flex flex-col items-center justify-center py-6`}
         >
           <span>
@@ -158,8 +158,8 @@ const AdminSidebar = (props) => {
         <div
           onClick={(e) => history.push("/admin/dashboard/productStatistics")}
           className={`${location.pathname === "/admin/dashboard/productStatistics"
-              ? "border-r-4 border-gray-800 bg-gray-100"
-              : ""
+            ? "border-r-4 border-gray-800 bg-gray-100"
+            : ""
             } hover:bg-gray-200 cursor-pointer flex flex-col items-center justify-center py-6`}
         >
           <span>
@@ -184,8 +184,8 @@ const AdminSidebar = (props) => {
         <div
           onClick={(e) => history.push("/admin/dashboard/userStatistics")}
           className={`${location.pathname === "/admin/dashboard/userStatistics"
-              ? "border-r-4 border-gray-800 bg-gray-100"
-              : ""
+            ? "border-r-4 border-gray-800 bg-gray-100"
+            : ""
             } hover:bg-gray-200 cursor-pointer flex flex-col items-center justify-center py-6`}
         >
           <span>
@@ -194,6 +194,34 @@ const AdminSidebar = (props) => {
           <span className="hover:text-gray-800">Thống kê người dùng</span>
         </div>
         <hr className="border-b border-gray-200" />
+        <hr className="border-b border-gray-200" />
+        <div
+          onClick={(e) => history.push("/admin/dashboard/contacts")}
+          className={`${location.pathname === "/admin/dashboard/contacts"
+            ? "border-r-4 border-gray-800 bg-gray-100"
+            : ""
+            } hover:bg-gray-200 cursor-pointer flex flex-col items-center justify-center py-6`}
+        >
+          <span>
+            <svg
+              className="w-8 h-8 text-gray-600 hover:text-gray-800"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M16 12a4 4 0 01-8 0m8 0a4 4 0 00-8 0m8 0v1a3 3 0 01-3 3H9a3 3 0 01-3-3v-1m12-5V5a2 2 0 00-2-2H8a2 2 0 00-2 2v2m12 0H6"
+              />
+            </svg>
+          </span>
+          <span className="hover:text-gray-800">Liên hệ khách hàng</span>
+        </div>
+        <hr className="border-b border-gray-200" />
+
       </div>
     </Fragment>
   );

@@ -45,7 +45,7 @@ class Product {
         .find({ pStatus: "Active" })
         .populate("pCategory", "_id cName cParentCategory")
         .sort({ _id: -1 });
-  
+
       if (Products) {
         return res.json({ Products });
       }
@@ -61,7 +61,7 @@ class Product {
         .find({ pStatus: { $in: ["Active", "Disabled"] } })
         .populate("pCategory", "_id cName")
         .sort({ _id: -1 });
-  
+
       if (Products) {
         return res.json({ Products });
       }
@@ -74,9 +74,9 @@ class Product {
   async postAddProduct(req, res) {
     let { pName, pDescription, pPrice, pQuantity, pCategory, pOffer, pStatus, pBrand } = req.body;
     let images = req.files;
-  
+
     // Validation
-    if (!pName || !pDescription || !pPrice || !pQuantity || !pCategory || !pOffer || !pStatus||!pBrand) {
+    if (!pName || !pDescription || !pPrice || !pQuantity || !pCategory || !pOffer || !pStatus || !pBrand) {
       //Product.deleteImages(images, "file");
       return res.json({ error: "All fields must be required" });
     } else if (pName.length > 255 || pDescription.length > 3000) {
@@ -92,15 +92,16 @@ class Product {
       return res.json({ error: "Quantity must be a non-negative number" });
     } else {
       try {
-        pName=pName.trimEnd();
+        pName = pName.trimEnd();
         // Kiểm tra trùng tên
         const existingProduct = await productModel.findOne({
-          pName: { $regex: new RegExp("^" + pName + "$", "i") } });
+          pName: { $regex: new RegExp("^" + pName + "$", "i") }
+        });
         if (existingProduct) {
           //Product.deleteImages(images, "file");
           return res.json({ error: "Product with the same name already exists" });
         }
-  
+
         let allImages = [];
         for (const img of images) {
           const result = await cloudinary.v2.uploader.upload(img.path, { folder: 'products' });
@@ -109,7 +110,7 @@ class Product {
             url: result.secure_url
           });
         }
-  
+
         let newProduct = new productModel({
           pImages: allImages,
           pName,
@@ -121,8 +122,8 @@ class Product {
           pStatus,
           pBrand,
         });
-  
-  
+
+
         let save = await newProduct.save();
         if (save) {
           return res.json({ success: "Product created successfully" });
@@ -133,11 +134,11 @@ class Product {
       }
     }
   }
-  
+
   async postEditProduct(req, res) {
-    const { pId, pName, pDescription, pPrice, pQuantity, pCategory, pOffer, pStatus,pBrand } = req.body;
-    
-    if (!pId || !pName || !pDescription || !pPrice || !pQuantity || !pCategory || !pOffer || !pStatus||!pBrand) {
+    const { pId, pName, pDescription, pPrice, pQuantity, pCategory, pOffer, pStatus, pBrand } = req.body;
+
+    if (!pId || !pName || !pDescription || !pPrice || !pQuantity || !pCategory || !pOffer || !pStatus || !pBrand) {
       return res.json({ error: "All fields must be required" });
     } else if (isNaN(pQuantity) || pQuantity < 0) {
       return res.json({ error: "Quantity must be a non-negative number" });
@@ -149,12 +150,12 @@ class Product {
         if (existingProduct) {
           return res.json({ error: "Product with the same name already exists" });
         }
-  
+
         const product = await productModel.findById(pId);
-  
+
         const editImages = req.files;
         let existingImages = [];
-  
+
         if (!editImages || editImages.length === 0) {
           // No new images selected, reuse existing images
           existingImages = product.pImages || [];
@@ -165,18 +166,18 @@ class Product {
             existingImages.push({ public_id: result.public_id, url: result.secure_url });
           }
         }
-  
+
         // Remove images from the cloud that are not present in the updated set
         if (product.pImages) {
           const cloudPublicIds = product.pImages.map(img => img.public_id);
           const updatedPublicIds = existingImages.map(img => img.public_id);
           const publicIdsToRemove = cloudPublicIds.filter(publicId => !updatedPublicIds.includes(publicId));
-  
+
           for (const publicId of publicIdsToRemove) {
             await cloudinary.v2.uploader.destroy(publicId);
           }
         }
-  
+
         const editData = {
           pName,
           pDescription,
@@ -188,30 +189,30 @@ class Product {
           pBrand,
           pImages: existingImages,
         };
-  
+
         const editProduct = await productModel.findByIdAndUpdate(pId, editData);
-  
+
         return res.json({ success: "Product edited successfully" });
-  
+
       } catch (err) {
         console.log(err);
         return res.json({ error: "An error occurred while saving the product" });
       }
     }
   }
-  
-  async  getDeleteProduct(req, res) {
+
+  async getDeleteProduct(req, res) {
     let { pId } = req.body;
-  
+
     if (!pId) {
       return res.json({ error: "All fields must be required" });
     } else {
       try {
         let deleteProductObj = await productModel.findById(pId);
-  
+
         // Lấy tên sản phẩm
         let productName = deleteProductObj.pName;
-  
+
         // Thực hiện cập nhật trạng thái sản phẩm
         let deleteProduct = await productModel.findByIdAndUpdate(
           pId,
@@ -222,11 +223,11 @@ class Product {
           },
           { new: true } // Trả về bản ghi đã được cập nhật
         );
-  
+
         if (deleteProduct) {
           // Delete Image from uploads -> products folder
           await deleteCloudinaryImages(deleteProductObj.pImages);
-  
+
           return res.json({ success: "Product deleted successfully" });
         }
       } catch (err) {
@@ -235,7 +236,7 @@ class Product {
       }
     }
   }
-  
+
 
   async getSingleProduct(req, res) {
     let { pId } = req.body;
@@ -281,7 +282,7 @@ class Product {
     } else {
       try {
         let products = await productModel
-          .find({ pPrice: { $lte: price } , pStatus: "Active"})
+          .find({ pPrice: { $lte: price }, pStatus: "Active" })
           .populate("pCategory", "_id cName cParentCategory")
           .sort({ pPrice: -1 });
         if (products) {
@@ -332,17 +333,17 @@ class Product {
   async postAddReview(req, res) {
     try {
       const { pId, uId, rating, review } = req.body;
-  
+
       if (!pId || !rating || !review || !uId) {
         return res.json({ error: "All fields must be required" });
       }
-  
+
       const checkReviewRatingExists = await productModel.findOne({ _id: pId });
-  
+
       if (checkReviewRatingExists.pRatingsReviews.some((item) => item.user === uId)) {
         return res.json({ error: "You have already reviewed the product" });
       }
-  
+
       const newRatingReview = await productModel.findByIdAndUpdate(
         pId,
         {
@@ -352,13 +353,13 @@ class Product {
         },
         { new: true }
       );
-  
+
       if (!newRatingReview) {
         return res.json({ error: "Failed to add review" });
       }
-  
+
       const avgRating = newRatingReview.pRatingsReviews.reduce((acc, item) => item.rating + acc, 0) / newRatingReview.pRatingsReviews.length;
-  
+
       await productModel.findByIdAndUpdate(
         pId,
         {
@@ -368,30 +369,30 @@ class Product {
           },
         }
       );
-  
+
       return res.json({ success: "Thanks for your review" });
     } catch (err) {
       console.error(err);
       return res.json({ error: "Something went wrong" });
     }
   }
-  
+
   async deleteReview(req, res) {
     try {
       const { rId, pId } = req.body;
-  
+
       if (!rId) {
         return res.json({ message: "All fields must be required" });
       }
-  
+
       const reviewDelete = await productModel.findByIdAndUpdate(
         pId,
         { $pull: { pRatingsReviews: { _id: rId } } },
         { new: true }
       );
-  
+
       const avgRating = reviewDelete.pRatingsReviews.reduce((acc, item) => item.rating + acc, 0) / reviewDelete.pRatingsReviews.length;
-  
+
       await productModel.findByIdAndUpdate(
         pId,
         {
@@ -401,14 +402,14 @@ class Product {
           },
         }
       );
-  
+
       return res.json({ success: "Your review is deleted" });
     } catch (err) {
       console.error(err);
       return res.json({ error: "Something went wrong" });
     }
   }
-  
+
   async getFilteredProducts(req, res) {
     const {
       category,
@@ -417,41 +418,107 @@ class Product {
       offerSort,
       soldSort,
     } = req.query;
-  
-    let query = {pStatus: "Active"};
-  
+
+    let query = { pStatus: "Active" };
+
     if (category) {
       query.pCategory = category;
     }
-    
+
     if (brand) {
       query.pBrand = brand;
     }
-  
+
     let sortQuery = {};
-  
+
     if (priceSort) {
       sortQuery.pPrice = priceSort === 'desc' ? -1 : 1;
     }
-    
+
     if (offerSort) {
       sortQuery.pOffer = offerSort === 'desc' ? -1 : 1;
     }
-    
+
     if (soldSort) {
       sortQuery.pSold = soldSort === 'desc' ? -1 : 1;
     }
-  
+
     try {
       const products = await productModel.find(query)
-      .populate("pCategory", "_id cName cParentCategory")
-      .sort(sortQuery);
+        .populate("pCategory", "_id cName cParentCategory")
+        .sort(sortQuery);
       res.json({ Products: products });
     } catch (error) {
       console.error('Error fetching filtered products:', error);
       res.status(500).json({ error: 'An error occurred while fetching the filtered products' });
     }
   }
+  /**
+ * ✅ Thêm nhiều sản phẩm cùng lúc (bulk add)
+ * Hỗ trợ upload qua JSON hoặc file Excel/CSV (convert thành JSON trước)
+ * Nếu có imageUrl, tự upload lên Cloudinary
+ */
+  async postBulkAddProducts(req, res) {
+    try {
+      const { products } = req.body; // Nhận mảng sản phẩm [{ pName, pDescription, ... }, ...]
+      if (!products || !Array.isArray(products)) {
+        return res.status(400).json({ error: "Invalid products array" });
+      }
+
+      const results = [];
+
+      for (const p of products) {
+        // Validation cơ bản
+        if (!p.pName || !p.pDescription || !p.pPrice || !p.pQuantity || !p.pCategory || !p.pStatus || !p.pBrand) {
+          results.push({ name: p.pName || "unknown", status: "❌ missing fields" });
+          continue;
+        }
+
+        // Kiểm tra trùng tên
+        const exists = await productModel.findOne({ pName: { $regex: new RegExp("^" + p.pName + "$", "i") } });
+        if (exists) {
+          results.push({ name: p.pName, status: "⚠️ duplicate skipped" });
+          continue;
+        }
+
+        // Upload ảnh (nếu có imageUrl)
+        let allImages = [];
+        if (p.imageUrl) {
+          try {
+            const result = await cloudinary.v2.uploader.upload(p.imageUrl, { folder: "products" });
+            allImages.push({
+              public_id: result.public_id,
+              url: result.secure_url,
+            });
+          } catch (err) {
+            console.warn(`⚠️ Lỗi upload ảnh cho ${p.pName}:`, err.message);
+          }
+        }
+
+        // Tạo sản phẩm mới
+        const newProduct = new productModel({
+          pImages: allImages,
+          pName: p.pName.trim(),
+          pDescription: p.pDescription,
+          pPrice: p.pPrice,
+          pQuantity: p.pQuantity,
+          pCategory: p.pCategory,
+          pOffer: p.pOffer || 0,
+          pStatus: p.pStatus,
+          pBrand: p.pBrand,
+        });
+
+        await newProduct.save();
+        results.push({ name: p.pName, status: "✅ created" });
+      }
+
+      return res.json({ message: "Bulk add completed", results });
+    } catch (err) {
+      console.error("Bulk add error:", err);
+      return res.status(500).json({ error: "Server error during bulk add" });
+    }
+  }
+
 }
 
 

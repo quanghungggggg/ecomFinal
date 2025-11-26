@@ -46,6 +46,8 @@ const CreateAllFolder = require("./config/uploadFolderCreateScript");
 
 // Image Search Route
 const imageSearchRouter = require("./routes/imageSearch");
+const blogRouter = require("./routes/blogs");
+const contactRouter = require("./routes/contact");
 
 /* Create All Uploads Folder if not exists | For Uploading Images */
 CreateAllFolder();
@@ -90,7 +92,7 @@ const swaggerSpec = {
     },
     servers: [
       {
-        url: "http://localhost:8000",
+        url: "http://localhost:5000",
       }
     ]
   },
@@ -109,6 +111,9 @@ app.use("/api/customize", customizeRouter);
 app.use("/api/discount", discountRouter);
 app.use("/api/redeem", redeemRouter);
 app.use("/api/image-search", imageSearchRouter);
+app.use("/api/blogs", blogRouter);
+app.use("/api/contact", contactRouter);
+
 
 // Run Server
 const PORT = process.env.PORT || 5000;

@@ -64,7 +64,7 @@ const SellTable = () => {
         <div className="text-sm text-gray-600 mt-2">
           Tổng có{" "}
           {data.totalOrders.Orders !== undefined ? ordersList().length : 0}{" "}
-            đơn hàng trong ngày
+          đơn hàng trong ngày
         </div>
         <div className="flex justify-center">
           <span

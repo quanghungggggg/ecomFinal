@@ -12,20 +12,43 @@ import {
   ProductByCategory,
   CheckoutPage,
 } from "./shop";
-import { DashboardAdmin, Categories, Products, Orders, Users, RedeemPoints, Discounts, ProductStatistics, UserStatistics } from "./admin";
-import { UserProfile, UserOrders, UserDiscount, RedeemPoint, SettingUser } from "./shop/dashboardUser";
-import { DashboardShipper, Order } from "./shipper"
+
+import {
+  DashboardAdmin,
+  Categories,
+  Products,
+  Orders,
+  Users,
+  RedeemPoints,
+  Discounts,
+  ProductStatistics,
+  UserStatistics,
+  Contacts, // ✅ Thêm Contacts
+} from "./admin";
+
+import {
+  UserProfile,
+  UserOrders,
+  UserDiscount,
+  RedeemPoint,
+  SettingUser,
+} from "./shop/dashboardUser";
+
+import { DashboardShipper, Order } from "./shipper";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import ConfirmSignup from "./shop/auth/ConfirmSignup";
 import Blog from "./shop/home/Blog";
-
+import BlogDetail from "./shop/home/BlogDetail";
+import Contact from "./shop/home/Contact"; // ✅ Trang liên hệ public (frontend)
 
 /* Routing All page will be here */
 const Routes = (props) => {
   return (
     <Router>
       <Switch>
-        {/* Shop & Public Routes */}
+        {/* ========================= */}
+        {/* SHOP & PUBLIC ROUTES */}
+        {/* ========================= */}
         <Route exact path="/" component={Home} />
         <Route exact path="/shop" component={Shop} />
         <Route exact path="/wish-list" component={WishList} />
@@ -37,20 +60,34 @@ const Routes = (props) => {
           component={ProductByCategory}
         />
         <Route exact path="/blog" component={Blog} />
+        <Route exact path="/blog/:id" component={BlogDetail} />
+
+        {/* ✅ Trang Liên hệ người dùng */}
+        <Route exact path="/contact-us" component={Contact} />
+
         <CartProtectedRoute
           exact={true}
           path="/checkout"
           component={CheckoutPage}
         />
-        {/* Shop & Public Routes End */}
 
+        {/* ========================= */}
+        {/* SHIPPER ROUTES */}
+        {/* ========================= */}
+        <ShipperProtectedRoute
+          exact={true}
+          path="/shipper/dashboard"
+          component={DashboardShipper}
+        />
+        <ShipperProtectedRoute
+          exact={true}
+          path="/shipper/dashboard/orders"
+          component={Order}
+        />
 
-        {/* Shipper Routes */}
-        <ShipperProtectedRoute exact={true} path="/shipper/dashboard" component={DashboardShipper} />
-        <ShipperProtectedRoute exact={true} path="/shipper/dashboard/orders" component={Order} />
-        {/* Shipper Routes End*/}
-
-        {/* Admin Routes */}
+        {/* ========================= */}
+        {/* ADMIN ROUTES */}
+        {/* ========================= */}
         <AdminProtectedRoute
           exact={true}
           path="/admin/dashboard"
@@ -96,9 +133,17 @@ const Routes = (props) => {
           path="/admin/dashboard/userStatistics"
           component={UserStatistics}
         />
-        {/* Admin Routes End */}
 
-        {/* User Dashboard */}
+        {/* ✅ Thêm route cho quản lý liên hệ khách hàng */}
+        <AdminProtectedRoute
+          exact={true}
+          path="/admin/dashboard/contacts"
+          component={Contacts}
+        />
+
+        {/* ========================= */}
+        {/* USER DASHBOARD ROUTES */}
+        {/* ========================= */}
         <ProtectedRoute
           exact={true}
           path="/user/profile"
@@ -124,9 +169,10 @@ const Routes = (props) => {
           path="/user/discount"
           component={UserDiscount}
         />
-        {/* User Dashboard End */}
 
-        {/* 404 Page */}
+        {/* ========================= */}
+        {/* 404 PAGE */}
+        {/* ========================= */}
         <Route component={PageNotFound} />
       </Switch>
     </Router>

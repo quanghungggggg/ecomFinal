@@ -7,6 +7,8 @@ import Discounts from "./discounts";
 import RedeemPoints from "./redeemPoint";
 import UserStatistics from "./userStatistics";
 import ProductStatistics from "./productStatistics";
+import Contacts from "./contacts";
 
 
-export { DashboardAdmin, Categories, Products, Orders, Users, Discounts, RedeemPoints, ProductStatistics, UserStatistics };
+
+export { DashboardAdmin, Categories, Products, Orders, Users, Discounts, RedeemPoints, ProductStatistics, UserStatistics, Contacts };

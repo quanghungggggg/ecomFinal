@@ -12,6 +12,7 @@
     "braintree-web-drop-in-react": "^1.2.1",
     "chart.js": "^3.6.0",
     "lodash": "^4.17.21",
+    "lucide-react": "^0.545.0",
     "moment": "^2.29.0",
     "react": "^16.13.1",
     "react-bootstrap": "^2.9.1",
@@ -21,6 +22,7 @@
     "react-facebook": "^9.0.12",
     "react-router-dom": "^5.3.4",
     "react-scripts": "^5.0.1",
+    "react-select": "^5.10.2",
     "react-slider": "^2.0.6",
     "react-toastify": "^8.0.0",
     "unorm": "^1.6.0"
