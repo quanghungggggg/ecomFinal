@@ -3,3 +3,17 @@ uploads
 images
 package-lock.json
 img
+# Python ignore
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env
+
+# Dữ liệu ảnh training (Không đẩy lên GitHub vì nặng)
+dataset/
+
+# NHƯNG: Phải cho phép đẩy file index lên để Render dùng
+!faiss_index.bin
+!mapping.npy

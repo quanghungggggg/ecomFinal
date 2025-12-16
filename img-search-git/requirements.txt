@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+python-multipart
+numpy
+faiss-cpu
+torch --index-url https://download.pytorch.org/whl/cpu
+torchvision --index-url https://download.pytorch.org/whl/cpu
+ftfy
+regex
+git+https://github.com/openai/CLIP.git
+Pillow
