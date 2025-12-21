@@ -84,7 +84,7 @@ const BlogDetail = () => {
 
     useEffect(() => {
         axios
-            .get(`http://localhost:5000/api/blogs/${id}`)
+            .get(`${process.env.REACT_APP_API_URL}/api/blogs/${id}`)
             .then((res) => {
                 setBlog(res.data);
                 setLoading(false);

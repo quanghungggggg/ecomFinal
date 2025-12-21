@@ -15,7 +15,7 @@ const Contact = () => {
         e.preventDefault();
         try {
             // Nếu có backend thì gửi API ở đây:
-            await axios.post("http://localhost:5000/api/contact", form);
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/contact`, form);
             // console.log("Dữ liệu gửi đi:", form);
             setStatus("success");
             setForm({ name: "", email: "", message: "" });

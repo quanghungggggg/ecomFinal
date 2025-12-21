@@ -20,7 +20,7 @@ const ImageSearch = () => {
         formData.append("file", image);
 
         try {
-            const res = await axios.post("http://localhost:5000/api/image-search", formData);
+            const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/image-search`, formData);
             const { productId } = res.data;
 
             if (productId) {

@@ -98,7 +98,7 @@ const Blog = () => {
     const history = useHistory();
 
     useEffect(() => {
-        axios.get("http://localhost:5000/api/blogs") // ✅ gọi API từ backend
+        axios.get(`${process.env.REACT_APP_API_URL}/api/blogs`) // ✅ gọi API từ backend
             .then(res => setBlogs(res.data))
             .catch(err => console.error("Error fetching blogs:", err));
     }, []);
