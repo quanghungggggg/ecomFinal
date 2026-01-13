@@ -17,8 +17,8 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: process.env.GMAIL_USER || 'duyvivoo@gmail.com',
-    pass: process.env.GMAIL_PASS || 'dryn axhv jabw tyxc',
+    user: 'duyvivoo@gmail.com',
+    pass: 'dryn axhv jabw tyxc',
   },
 });
 
@@ -27,7 +27,7 @@ function sendOTPEmail(email, otp) {
     console.log(`📧 Sending OTP email to ${email} with OTP: "${otp}"`);
 
     const mailOptions = {
-      from: `Home Market <${process.env.GMAIL_USER || 'duyvivoo@gmail.com'}>`,
+      from: 'Home Market <duyvivoo@gmail.com>',
       to: email,
       subject: 'OTP for Signup Verification',
       html: `<div style="font-family: Arial, sans-serif; padding: 20px;">
@@ -118,14 +118,11 @@ class Auth {
                 return res.json({ error });
               }
 
-              // User exists but not verified, delete and recreate
-              console.log('User exists but not verified, deleting and recreating');
-              await userModel.deleteOne({ email: email });
-
-              const otp = generateOTP();
-              console.log(`🆕 Generated new OTP for ${email}: "${otp}"`);
+              // User exists but not verified - REUSE existing OTP instead of creating new one
+              console.log('User exists but not verified - reusing existing OTP');
+              const otp = data.otp; // Use existing OTP, don't create new one
+              console.log(`♻️ Reusing OTP for ${email}: "${otp}"`);
               const hashedPassword = bcrypt.hashSync(password, 10);
-
 
               const imagePath = "../client/src/assets/default_avatar.jpg";
               const result = await cloudinary.v2.uploader.upload(imagePath, {
@@ -134,25 +131,18 @@ class Auth {
                 crop: "scale"
               });
 
-
-              // Create new user with new OTP
-              let newUser = new userModel({
-                name,
-                email,
-                userImage: {
-                  public_id: result.public_id,
-                  url: result.secure_url
-                },
-                password: hashedPassword,
-                otp,
-                userRole: 0,
-                point: 0,
-              });
+              // Update existing user instead of creating new one
+              data.password = hashedPassword;
+              data.userImage = {
+                public_id: result.public_id,
+                url: result.secure_url
+              };
+              // Keep the same OTP - don't generate a new one!
 
               try {
-                // Save new user to the database
-                const savedUser = await newUser.save();
-                console.log(`💾 User saved with OTP: "${savedUser.otp}"`);
+                // Save updated user to the database
+                const savedUser = await data.save();
+                console.log(`💾 User updated with OTP: "${savedUser.otp}"`);
 
                 // Send OTP email
                 try {
@@ -168,7 +158,7 @@ class Auth {
                   email: email,
                 });
               } catch (err) {
-                console.log('Error during user save:', err);
+                console.log('Error during user update:', err);
                 return res.json({ error: "An error occurred during signup. Please try again." });
               }
             }
