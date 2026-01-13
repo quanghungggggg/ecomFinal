@@ -18,6 +18,22 @@ const Signup = () => {
   });
   const [signedUp, setSignedUp] = useState(false);
 
+  const handleOTPSuccess = () => {
+    // Khi OTP verify thành công, reset signup form và hiện login form
+    setSignedUp(false);
+    setData({
+      name: "",
+      email: "",
+      password: "",
+      cPassword: "",
+      error: false,
+      loading: false,
+      success: false,
+    });
+    // Dispatch event để parent component (LoginSignup) biết và switch sang login form
+    dispatch({ type: "showLoginForm" });
+  };
+
   const alert = (msg, type) => (
     <div className={`text-sm text-${type}-500`}>{msg}</div>
   );
@@ -167,7 +183,7 @@ const Signup = () => {
           </div>
         </form>
       </div>
-      {signedUp && <ConfirmSignup emailFromSignUp={data.email} />}
+      {signedUp && <ConfirmSignup emailFromSignUp={data.email} onSuccess={handleOTPSuccess} />}
     </Fragment>
   );
 };
