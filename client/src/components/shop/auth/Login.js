@@ -45,7 +45,7 @@ const Login = () => {
         {/* Box tiêu đề */}
         <div className="bg-green-300 text-green-900 text-center py-4 rounded-lg mb-6 shadow-md">
           <h2 className="text-3xl font-bold">Đăng nhập</h2>
-          <p className="text-sm">Chào mừng bạn trở lại 👋</p>
+          <p className="text-sm">Chào mừng bạn trở lại </p>
         </div>
 
         {/* Thông báo lỗi chung */}
@@ -117,7 +117,6 @@ const Login = () => {
             Quên mật khẩu?
           </button>
           <a href="/register" className="hover:underline">
-            Đăng ký ngay
           </a>
         </div>
       </div>

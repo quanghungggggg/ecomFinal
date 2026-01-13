@@ -31,11 +31,11 @@ const Contact = () => {
                 {/* ✅ Phần tiêu đề */}
                 <div className="text-center mb-12">
                     <h1 className="text-4xl font-bold text-green-700 mb-4">
-                        📞 Liên hệ với Home Market
+                        Liên hệ với Home Market
                     </h1>
                     <p className="text-gray-600 max-w-2xl mx-auto">
                         Chúng tôi luôn sẵn sàng lắng nghe phản hồi, câu hỏi hoặc góp ý của bạn.
-                        Hãy để lại thông tin bên dưới để Home Market có thể hỗ trợ bạn tốt nhất 🌿
+                        Hãy để lại thông tin bên dưới để Home Market có thể hỗ trợ bạn tốt nhất
                     </p>
                 </div>
 

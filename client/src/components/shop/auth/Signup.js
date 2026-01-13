@@ -43,9 +43,10 @@ const Signup = () => {
     if (data.cPassword !== data.password) {
       return setData({
         ...data,
+        loading: false,
         error: {
-          cPassword: "Password doesn't match",
-          password: "Password doesn't match",
+          cPassword: "Mật khẩu không khớp",
+          password: "Mật khẩu không khớp",
         },
       });
     }
@@ -83,107 +84,147 @@ const Signup = () => {
 
   return (
     <Fragment>
-      <div className="max-w-md mx-auto">
-        <div className="text-center text-2xl mb-6">Register</div>
-        <form className="space-y-4">
-          {data.success ? alert(data.success, "green") : ""}
-          <div className="flex flex-col">
-            <label htmlFor="name">
-              Name<span className="text-sm text-gray-600 ml-1">*</span>
-            </label>
-            <input
-              onChange={(e) =>
-                setData({
-                  ...data,
-                  success: false,
-                  error: {},
-                  name: e.target.value,
-                })
-              }
-              value={data.name}
-              type="text"
-              id="name"
-              className={`${data.error.name ? "border-red-500" : ""
-                } px-4 py-2 focus:outline-none border w-full`}
-            />
-            {!data.error ? "" : alert(data.error.name, "red")}
+      <div className="flex items-center justify-center px-4">
+        <div className="w-full max-w-md">
+          {/* Box tiêu đề */}
+          <div className="bg-green-300 text-green-900 text-center py-4 rounded-lg mb-6 shadow-md">
+            <h2 className="text-3xl font-bold">Đăng ký</h2>
+            <p className="text-sm">Tạo tài khoản mới của bạn</p>
           </div>
-          <div className="flex flex-col">
-            <label htmlFor="email">
-              Email address<span className="text-sm text-gray-600 ml-1">*</span>
-            </label>
-            <input
-              onChange={(e) =>
-                setData({
-                  ...data,
-                  success: false,
-                  error: {},
-                  email: e.target.value,
-                })
-              }
-              value={data.email}
-              type="email"
-              id="email"
-              className={`${data.error.email ? "border-red-500" : ""
-                } px-4 py-2 focus:outline-none border w-full`}
-            />
-            {!data.error ? "" : alert(data.error.email, "red")}
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="password">
-              Password<span className="text-sm text-gray-600 ml-1">*</span>
-            </label>
-            <input
-              onChange={(e) =>
-                setData({
-                  ...data,
-                  success: false,
-                  error: {},
-                  password: e.target.value,
-                })
-              }
-              value={data.password}
-              type="password"
-              id="password"
-              className={`${data.error.password ? "border-red-500" : ""
-                } px-4 py-2 focus:outline-none border w-full`}
-            />
-            {!data.error ? "" : alert(data.error.password, "red")}
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="cPassword">
-              Confirm password
-              <span className="text-sm text-gray-600 ml-1">*</span>
-            </label>
-            <input
-              onChange={(e) =>
-                setData({
-                  ...data,
-                  success: false,
-                  error: {},
-                  cPassword: e.target.value,
-                })
-              }
-              value={data.cPassword}
-              type="password"
-              id="cPassword"
-              className={`${data.error.cPassword ? "border-red-500" : ""
-                } px-4 py-2 focus:outline-none border w-full`}
-            />
-            {!data.error ? "" : alert(data.error.cPassword, "red")}
-          </div>
-          <div className="flex flex-col space-y-2 md:flex-row md:justify-between md:items-center">
-          </div>
-          <div
-            onClick={(e) => formSubmit()}
-            style={{ background: "#303031" }}
-            className="px-4 py-2 text-white text-center cursor-pointer font-medium"
-          >
-            Create an account
-          </div>
-        </form>
+
+          {/* Thông báo thành công */}
+          {data.success && (
+            <div className="bg-green-500 text-white px-4 py-2 rounded mb-4 text-center shadow-md">
+              {data.success}
+            </div>
+          )}
+
+          {/* Form */}
+          {signedUp ? (
+            <ConfirmSignup emailFromSignUp={data.email} onSuccess={handleOTPSuccess} />
+          ) : (
+            <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); formSubmit(); }}>
+              <div>
+                <label className="block mb-1 text-sm font-medium text-green-900">
+                  Họ và tên
+                </label>
+                <input
+                  type="text"
+                  value={data.name}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      success: false,
+                      error: {},
+                      name: e.target.value,
+                    })
+                  }
+                  className={`w-full px-4 py-3 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none 
+                             text-gray-900 placeholder-gray-400 shadow ${data.error?.name ? "border-2 border-red-500" : ""
+                    }`}
+                  placeholder="Nhập họ và tên"
+                  required
+                />
+                {data.error?.name && (
+                  <p className="text-sm text-red-600 mt-1">{data.error.name}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block mb-1 text-sm font-medium text-green-900">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  value={data.email}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      success: false,
+                      error: {},
+                      email: e.target.value,
+                    })
+                  }
+                  className={`w-full px-4 py-3 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none 
+                             text-gray-900 placeholder-gray-400 shadow ${data.error?.email ? "border-2 border-red-500" : ""
+                    }`}
+                  placeholder="you@example.com"
+                  required
+                />
+                {data.error?.email && (
+                  <p className="text-sm text-red-600 mt-1">{data.error.email}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block mb-1 text-sm font-medium text-green-900">
+                  Mật khẩu
+                </label>
+                <input
+                  type="password"
+                  value={data.password}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      success: false,
+                      error: {},
+                      password: e.target.value,
+                    })
+                  }
+                  className={`w-full px-4 py-3 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none 
+                             text-gray-900 placeholder-gray-400 shadow ${data.error?.password ? "border-2 border-red-500" : ""
+                    }`}
+                  placeholder="••••••••"
+                  required
+                />
+                {data.error?.password && (
+                  <p className="text-sm text-red-600 mt-1">{data.error.password}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block mb-1 text-sm font-medium text-green-900">
+                  Xác nhận mật khẩu
+                </label>
+                <input
+                  type="password"
+                  value={data.cPassword}
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      success: false,
+                      error: {},
+                      cPassword: e.target.value,
+                    })
+                  }
+                  className={`w-full px-4 py-3 rounded-lg focus:ring-2 focus:ring-green-400 focus:outline-none 
+                             text-gray-900 placeholder-gray-400 shadow ${data.error?.cPassword ? "border-2 border-red-500" : ""
+                    }`}
+                  placeholder="••••••••"
+                  required
+                />
+                {data.error?.cPassword && (
+                  <p className="text-sm text-red-600 mt-1">{data.error.cPassword}</p>
+                )}
+              </div>
+
+              {/* Thông báo lỗi chung */}
+              {data.error && typeof data.error === "string" && (
+                <p className="text-sm text-red-600">{data.error}</p>
+              )}
+
+              <button
+                type="submit"
+                disabled={data.loading}
+                className="w-full py-3 font-semibold text-white bg-green-500 rounded-lg 
+                           hover:bg-green-600 transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {data.loading ? "Đang đăng ký..." : "Tạo tài khoản"}
+              </button>
+            </form>
+          )}
+        </div>
       </div>
-      {signedUp && <ConfirmSignup emailFromSignUp={data.email} onSuccess={handleOTPSuccess} />}
     </Fragment>
   );
 };
