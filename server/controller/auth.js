@@ -6,7 +6,6 @@ const { JWT_SECRET } = require("../config/keys");
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const { deleteModel } = require("mongoose");
-const cloudinary = require('cloudinary')
 
 function generateOTP() {
   return crypto.randomBytes(4).toString('hex').toUpperCase();
@@ -124,19 +123,9 @@ class Auth {
               console.log(`♻️ Reusing OTP for ${email}: "${otp}"`);
               const hashedPassword = bcrypt.hashSync(password, 10);
 
-              const imagePath = "../client/src/assets/default_avatar.jpg";
-              const result = await cloudinary.v2.uploader.upload(imagePath, {
-                folder: 'avatars',
-                width: 150,
-                crop: "scale"
-              });
-
               // Update existing user instead of creating new one
               data.password = hashedPassword;
-              data.userImage = {
-                public_id: result.public_id,
-                url: result.secure_url
-              };
+              // Keep userImage as is (don't upload new image)
               // Keep the same OTP - don't generate a new one!
 
               try {
@@ -144,13 +133,11 @@ class Auth {
                 const savedUser = await data.save();
                 console.log(`💾 User updated with OTP: "${savedUser.otp}"`);
 
-                // Send OTP email
-                try {
-                  await sendOTPEmail(email, otp);
-                } catch (mailErr) {
+                // Send OTP email asynchronously (don't wait for it)
+                sendOTPEmail(email, otp).catch((mailErr) => {
                   console.error('Failed to send OTP email:', mailErr);
-                  // Vẫn tạo tài khoản dù gửi mail lỗi, user có thể request OTP lại
-                }
+                  // Email error doesn't affect signup response
+                });
 
                 console.log('Account created successfully. Please confirm OTP to verify account');
                 return res.json({
@@ -169,17 +156,10 @@ class Auth {
             console.log(`🆕 Generated new OTP for ${email}: "${otp}"`);
             const hashedPassword = bcrypt.hashSync(password, 10);
 
-            const imagePath = "../client/src/assets/default_avatar.jpg";
-            const result = await cloudinary.v2.uploader.upload(imagePath, { folder: 'avatars' });
-
-
             let newUser = new userModel({
               name,
               email,
-              userImage: {
-                public_id: result.public_id,
-                url: result.secure_url
-              },
+              // userImage will be null or default (no upload during signup)
               password: hashedPassword,
               otp,
               userRole: 0,
@@ -192,13 +172,12 @@ class Auth {
               console.log(`💾 User saved with OTP: "${savedUser.otp}"`);
 
               console.log(savedUser);
-              // Send OTP email
-              try {
-                await sendOTPEmail(email, otp);
-              } catch (mailErr) {
+
+              // Send OTP email asynchronously (don't wait for it)
+              sendOTPEmail(email, otp).catch((mailErr) => {
                 console.error('Failed to send OTP email:', mailErr);
-                // Vẫn tạo tài khoản dù gửi mail lỗi, user có thể request OTP lại
-              }
+                // Email error doesn't affect signup response
+              });
 
               console.log('Account created successfully. Please confirm OTP to verify account');
               return res.json({
